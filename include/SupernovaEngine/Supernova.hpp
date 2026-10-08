@@ -51,6 +51,7 @@ namespace Supernova {
 		void initVulkan() {
 			createInstance();
 			setupDebugMessenger();
+			pickPhysicalDevice();
 		}
 		
 		void createInstance() {
@@ -137,6 +138,10 @@ namespace Supernova {
 											      .pfnUserCallback = &debugCallback};
 
 			debugMessenger = instance.createDebugUtilsMessengerEXT(debugUtilsMessengerCreateInfoEXT);
+		}
+
+		void pickPhysicalDevice() {
+			
 		}
 
 		void mainLoop() {
