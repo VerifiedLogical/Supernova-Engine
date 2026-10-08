@@ -40,6 +40,7 @@ namespace Supernova {
 		vk::raii::Context context;
 		vk::raii::Instance instance = nullptr;
 		vk::raii::DebugUtilsMessengerEXT debugMessenger = nullptr;
+		vk::raii::PhysicalDevice physicalDevice = nullptr;
 
 		void initWindow() {
 			glfwInit();
