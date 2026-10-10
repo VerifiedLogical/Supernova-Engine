@@ -60,10 +60,15 @@ namespace Supernova {
 		void initVulkan() {
 			createInstance();
 			setupDebugMessenger();
+			createSurface();
 			pickPhysicalDevice();
 			createLogicalDevice();
 		}
-		
+	
+		void createSurface() {
+			
+		}
+
 		void createLogicalDevice() {
 			std::vector<vk::QueueFamilyProperties> queueFamilyProperties = physicalDevice.getQueueFamilyProperties();
 			auto graphicsQueueFamilyProperty = std::ranges::find_if(queueFamilyProperties, [] (auto const & qfp) { return (qfp.queueFlags & vk::QueueFlagBits::eGraphics) != static_cast<vk::QueueFlags>(0); });
@@ -94,7 +99,6 @@ namespace Supernova {
 			graphicsQueue = vk::raii::Queue(device, graphicsIndex, 0);
 
 		}
-
 		void createInstance() {
 			constexpr vk::ApplicationInfo appInfo{.pApplicationName = "Supernova",
 							  .applicationVersion = VK_MAKE_VERSION(1, 0, 0),
