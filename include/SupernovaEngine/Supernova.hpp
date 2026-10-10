@@ -47,6 +47,7 @@ namespace Supernova {
 		vk::raii::PhysicalDevice physicalDevice = nullptr;
 		vk::raii::Device device = nullptr;
 		vk::raii::Queue graphicsQueue = nullptr;
+		vk::raii::SurfaceKHR surface = nullptr;
 
 
 		void initWindow() {
