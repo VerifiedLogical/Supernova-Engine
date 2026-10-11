@@ -69,7 +69,9 @@ namespace Supernova {
 		}
 
 		vk::PresentModeKHR chooseSwapPresentMode(std::vector<vk::PresentModKHR> const & availablePresentModes) {
-			
+			assert(std::ranges::any_of(availablePresentModes, [] (auto presentMode) { return presentMode == vk::PresentModeKHR::eFifo; }))
+			return std::ranges::any_of(availablePresentModes, [] (const vk::PresentModeKHR value) { return vk::PresentModeKHR::eMailbox == value; } ) ?
+			vk::PresentModeKHR::eMailbox : vk::PresentModeKHR::eFifo;
 		}
 	
 		void createSurface() {
