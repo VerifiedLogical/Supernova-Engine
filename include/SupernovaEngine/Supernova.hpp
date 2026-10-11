@@ -75,7 +75,16 @@ namespace Supernova {
 		}
 
 		vk::Extent2D chooseSwapExtent(vk::SurfaceCapabilitiesKHR const & capabilities) {
-			
+			if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+				return capabilities.currentExtent;
+			}
+
+			int width, height;
+
+			return {
+				std::clamp<uint32_t>(width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width),
+				std::clamp<uint32_t>(height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height)
+			};
 		}
 	
 		void createSurface() {
