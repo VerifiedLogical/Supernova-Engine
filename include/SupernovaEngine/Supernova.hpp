@@ -73,6 +73,10 @@ namespace Supernova {
 			return std::ranges::any_of(availablePresentModes, [] (const vk::PresentModeKHR value) { return vk::PresentModeKHR::eMailbox == value; } ) ?
 			vk::PresentModeKHR::eMailbox : vk::PresentModeKHR::eFifo;
 		}
+
+		vk::Extent2D chooseSwapExtent(vk::SurfaceCapabilitiesKHR const & capabilities) {
+			
+		}
 	
 		void createSurface() {
 			VkSurfaceKHR _surface;
