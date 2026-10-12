@@ -66,6 +66,11 @@ namespace Supernova {
 			createSurface();
 			pickPhysicalDevice();
 			createLogicalDevice();
+			createSwapChain();
+		}
+
+		void createSwapChain() {
+			
 		}
 
 		vk::PresentModeKHR chooseSwapPresentMode(std::vector<vk::PresentModKHR> const & availablePresentModes) {
