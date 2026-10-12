@@ -71,6 +71,11 @@ namespace Supernova {
 			pickPhysicalDevice();
 			createLogicalDevice();
 			createSwapChain();
+			creatImageViews();
+		}
+
+		void createImageViews() {
+		
 		}
 
 		vk::SurfaceFormatKHR chooseSwapSurfaceFormat(std::vector<vk::SurfaceFormatKHR> const & availableFormats) {
