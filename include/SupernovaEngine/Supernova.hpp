@@ -51,6 +51,10 @@ namespace Supernova {
 		vk::raii::Device device = nullptr;
 		vk::raii::Queue graphicsQueue = nullptr;
 		vk::raii::SurfaceKHR surface = nullptr;
+		vk::raii::SwapchainKHR swapChain = nullptr;
+		std::vector<vk::Image> swapChainImages;
+		vk::SurfaceFormatKHR swapChainSurfaceFormat;
+		vk::Extent2D swapChainExtent;
 
 
 		void initWindow() {
@@ -69,14 +73,28 @@ namespace Supernova {
 			createSwapChain();
 		}
 
-		void createSwapChain() {
-			
+		vk::SurfaceFormatKHR chooseSwapSurfaceFormat(std::vector<vk::SurfaceFormatKHR> const & availableFormats) {
+			const auto formatIt = std::ranges::find_if(availableFormats, [](const auto & format) {return format.format == vk::Format::eB8G8R8A8Srgb && format.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear;});
+			return formatIt != availableFormats.end() ? *formatIt : availableFormats[0];
 		}
 
-		vk::PresentModeKHR chooseSwapPresentMode(std::vector<vk::PresentModKHR> const & availablePresentModes) {
-			assert(std::ranges::any_of(availablePresentModes, [] (auto presentMode) { return presentMode == vk::PresentModeKHR::eFifo; }))
-			return std::ranges::any_of(availablePresentModes, [] (const vk::PresentModeKHR value) { return vk::PresentModeKHR::eMailbox == value; } ) ?
-			vk::PresentModeKHR::eMailbox : vk::PresentModeKHR::eFifo;
+		uint32_t chooseSwapMinImageCount(vk::SurfaceCapabilitiesKHR const &surfaceCapabilities) {
+			auto minImageCount = std::max(3u, surfaceCapabilities.minImageCount);
+			if ((0 < surfaceCapabilities.maxImageCount) && (surfaceCapabilities.maxImageCount < minImageCount)) {
+				minImageCount == surfaceCapabilities.maxImageCount;
+			}
+
+			return minImageCount;
+		}
+
+
+
+		vk::PresentModeKHR chooseSwapPresentMode(std::vector<vk::PresentModeKHR> const & availablePresentModes) {
+			assert(std::ranges::any_of(availablePresentModes, [](auto presentMode) { return presentMode == vk::PresentModeKHR::eFifo; }));
+
+			return std::ranges::any_of(availablePresentModes,
+						   [](const vk::PresentModeKHR value) { return vk::PresentModeKHR::eMailbox == value; }) ? vk::PresentModeKHR::eMailbox : vk::PresentModeKHR::eFifo;
+			
 		}
 
 		vk::Extent2D chooseSwapExtent(vk::SurfaceCapabilitiesKHR const & capabilities) {
@@ -91,7 +109,34 @@ namespace Supernova {
 				std::clamp<uint32_t>(height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height)
 			};
 		}
-	
+
+		void createSwapChain() {
+			vk::SurfaceCapabilitiesKHR surfaceCapabilities = physicalDevice.getSurfaceCapabilitiesKHR(*surface);
+			swapChainExtent = chooseSwapExtent(surfaceCapabilities);
+			uint32_t minImageCount = chooseSwapMinImageCount(surfaceCapabilities);
+
+			std::vector<vk::SurfaceFormatKHR> availableFormats = physicalDevice.getSurfaceFormatsKHR(*surface);
+			swapChainSurfaceFormat = chooseSwapSurfaceFormat(availableFormats);
+
+			std::vector<vk::PresentModeKHR> availablePresentModes = physicalDevice.getSurfacePresentModesKHR(*surface);
+
+			vk::SwapchainCreateInfoKHR swapChainCreateInfo {.surface = *surface,
+									.minImageCount = minImageCount,
+									.imageFormat = swapChainSurfaceFormat.format,
+									.imageColorSpace = swapChainSurfaceFormat.colorSpace,
+									.imageExtent = swapChainExtent,
+									.imageArrayLayers = 1,
+									.imageUsage = vk::ImageUsageFlagBits::eColorAttachment,
+									.imageSharingMode = vk::SharingMode::eExclusive,
+									.preTransform = surfaceCapabilities.currentTransform,
+									.compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque,
+									.presentMode = chooseSwapPresentMode(availablePresentModes),
+									.clipped = true};
+
+			swapChain = vk::raii::SwapchainKHR(device, swapChainCreateInfo);
+			swapChainImages = swapChain.getImages();
+		}
+
 		void createSurface() {
 			VkSurfaceKHR _surface;
 			if (glfwCreateWindowSurface(*instance, window, nullptr, &_surface) != 0) {
