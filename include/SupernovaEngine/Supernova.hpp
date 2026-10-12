@@ -55,7 +55,7 @@ namespace Supernova {
 		std::vector<vk::Image> swapChainImages;
 		vk::SurfaceFormatKHR swapChainSurfaceFormat;
 		vk::Extent2D swapChainExtent;
-
+		std::vector<vk::raii::ImageView> swapChainImageViews;
 
 		void initWindow() {
 			glfwInit();
