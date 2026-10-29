@@ -1,2 +1,4 @@
 # ignore the executable in the examples/test/ folder
 examples/test/test
+# ignore the compiled shader
+examples/test/shaders/compiled_shaders/slang.spv
