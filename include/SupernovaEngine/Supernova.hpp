@@ -77,7 +77,7 @@ namespace Supernova {
 		}
 
 		void createGraphicsPipeline() {
-			
+			auto shaderCode = readFile("examples/test/shaders/compiled_shaders/slang.spv");
 		}
 
 		static std::vector<char> readFile(const std::string& filename) {
