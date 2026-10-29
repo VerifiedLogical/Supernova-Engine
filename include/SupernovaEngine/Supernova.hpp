@@ -16,6 +16,7 @@ import vulkan_hpp;
 #include <cstdint>
 #include <limits>
 #include <algorithm>
+#include <fstream>
 
 const std::vector<char const*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
