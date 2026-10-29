@@ -90,7 +90,7 @@ namespace Supernova {
 			std::vector<char> buffer(file.tellg());
 
 			file.seekg(0, std::ios::beg);
-			file.read(buffer.data, static_cast<std::streamsize>(buffer.size()));
+			file.read(buffer.data(), static_cast<std::streamsize>(buffer.size()));
 
 			file.close();
 
